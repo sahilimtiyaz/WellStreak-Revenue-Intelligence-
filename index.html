@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d19">
+<title>WellStreak Revenue Intelligence</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d19;color:#f4f7ff;font-family:Arial,sans-serif}
+.container{max-width:850px;margin:auto;padding:25px 18px}
+header{padding:22px 0;border-bottom:1px solid #25334b}
+.logo{font-size:21px;font-weight:800;color:#55baff}
+.logo span{color:#d8b76b}
+.tag{color:#8295ae;font-size:12px;letter-spacing:2px;margin-top:9px}
+h1{font-size:32px;line-height:1.2;margin:30px 0 10px}
+.sub{color:#91a2ba;line-height:1.6}
+.panel{background:#111c2e;border:1px solid #263b58;border-radius:15px;padding:20px;margin-top:22px}
+h2{font-size:17px;margin:0 0 17px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+label{display:block;color:#a9bad0;font-size:13px;margin-bottom:8px}
+input{width:100%;padding:14px;border:1px solid #354a68;background:#091322;color:white;border-radius:9px;font-size:17px;outline:none}
+input:focus{border-color:#55baff}
+button{width:100%;padding:15px;background:#1689db;color:white;border:0;border-radius:9px;font-size:15px;font-weight:bold;margin-top:19px}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.metric{background:#0a1526;padding:16px;border-radius:10px;border:1px solid #273b55}
+.metric small{color:#91a5bf;font-size:12px}
+.metric strong{display:block;font-size:23px;margin-top:9px;color:#58bdff;overflow-wrap:anywhere}
+.metric.highlight strong{color:#e9c778}
+.note{font-size:12px;color:#8397b2;line-height:1.6;margin-top:16px}
+.cta{background:#152b45;border:1px solid #365b82;padding:20px;border-radius:13px;margin-top:20px}
+.cta p{color:#a7bad0;line-height:1.6}
+footer{text-align:center;color:#71839c;font-size:12px;padding:30px 0}
+@media(max-width:520px){
+.grid,.results{grid-template-columns:1fr}
+h1{font-size:27px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<div class="logo">WELL STREAK <span>AI</span></div>
+<div class="tag">BUSINESS INTELLIGENCE SYSTEM</div>
+</header>
+
+<h1>Discover Your Business Revenue Potential.</h1>
+<p class="sub">Calculate your current sales performance and identify the additional revenue your business could generate through improved lead conversion.</p>
+
+<section class="panel">
+<h2>01 / Business performance inputs</h2>
+<div class="grid">
+<div>
+<label>Monthly incoming leads</label>
+<input id="leads" type="number" min="0" value="500">
+</div>
+<div>
+<label>Current conversion rate (%)</label>
+<input id="current" type="number" min="0" max="100" step="0.1" value="3">
+</div>
+<div>
+<label>Average order value (₹)</label>
+<input id="value" type="number" min="0" value="5000">
+</div>
+<div>
+<label>Target conversion rate (%)</label>
+<input id="target" type="number" min="0" max="100" step="0.1" value="6">
+</div>
+<div>
+<label>Gross profit margin (%)</label>
+<input id="margin" type="number" min="0" max="100" value="40">
+</div>
+</div>
+<button onclick="calculate()">Calculate revenue opportunity →</button>
+<p class="note">Use your actual business figures. The target conversion rate is a scenario you choose, not a guaranteed improvement.</p>
+</section>
+
+<section class="panel" id="output" aria-live="polite">
+<h2>02 / Revenue intelligence report</h2>
+<div class="results">
+<div class="metric">
+<small>Current monthly revenue</small>
+<strong id="revenue">₹75,000</strong>
+</div>
+<div class="metric">
+<small>Current monthly customers</small>
+<strong id="customers">15</strong>
+</div>
+<div class="metric highlight">
+<small>Additional monthly customers</small>
+<strong id="extra">+15</strong>
+</div>
+<div class="metric highlight">
+<small>Additional monthly revenue</small>
+<strong id="growth">₹75,000</strong>
+</div>
+<div class="metric">
+<small>Additional gross profit</small>
+<strong id="profit">₹30,000</strong>
+</div>
+<div class="metric highlight">
+<small>Annual revenue opportunity</small>
+<strong id="annual">₹9,00,000</strong>
+</div>
+</div>
+<p class="note" id="status">Illustrative scenario based on the inputs above.</p>
+</section>
+
+<div class="cta">
+<h2>03 / Turn insights into business growth.</h2>
+<p>Better lead management, faster customer response and intelligent business automation can help businesses improve their sales operations.</p>
+<button onclick="share()">Share my business report ↗</button>
+</div>
+
+<footer>
+WELL STREAK AI · REVENUE INTELLIGENCE<br>
+Independent business planning tool. Projections are not guarantees.
+</footer>
+</div>
+
+<script>
+const ids=['leads','current','value','target','margin'];
+const get=id=>Number(document.getElementById(id).value);
+const money=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+
+function calculate(){
+const [leads,current,value,target,margin]=ids.map(get);
+if(!ids.every(id=>Number.isFinite(get(id)) && get(id)>=0) ||
+current>100 || target>100 || margin>100){
+alert('Enter valid values. Percentages must be between 0 and 100.');
+return;
+}
+const customers=leads*current/100;
+const future=leads*target/100;
+const extra=future-customers;
+const revenue=customers*value;
+const growth=extra*value;
+const profit=growth*margin/100;
+
+document.getElementById('revenue').textContent=money(revenue);
+document.getElementById('customers').textContent=customers.toFixed(1);
+document.getElementById('extra').textContent=(extra>=0?'+':'')+extra.toFixed(1);
+document.getElementById('growth').textContent=money(growth);
+document.getElementById('profit').textContent=money(profit);
+document.getElementById('annual').textContent=money(growth*12);
+
+document.getElementById('status').textContent=
+target>=current
+?'Scenario: '+current+'% current conversion → '+target+'% target conversion.'
+:'Your target is below current conversion. This scenario represents a potential revenue decline.';
+
+}
+function share(){
+const report=[
+'WELL STREAK AI - REVENUE INTELLIGENCE',
+'Monthly leads: '+get('leads'),
+'Current conversion: '+get('current')+'%',
+'Target conversion: '+get('target')+'%',
+'Average order value: '+money(get('value')),
+'Additional monthly revenue opportunity: '+document.getElementById('growth').textContent,
+'Annual revenue opportunity: '+document.getElementById('annual').textContent,
+'Illustrative projection, not a guarantee.'
+].join('\n');
+window.open('https://wa.me/?text='+encodeURIComponent(report),'_blank');
+}
+calculate();
+</script>
+</body>
+</html>
